@@ -17,7 +17,7 @@ $users = \App\Models\User::all();
     <section class="upperMenu">
         <div class="actions d-flex my-2">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createOrUpdate"
-                    onclick="changeAction('/store','null','Add')">
+                    onclick="changeAction('/store','Add')">
                 Add
             </button>
             <form action="" class="d-flex mx-2" id="multipleEdit">
@@ -77,7 +77,7 @@ $users = \App\Models\User::all();
                              aria-label="Toolbar with button groups">
                             <div class="btn-group" role="group" aria-label="First group">
                                 <button type="button" class="btn btn-outline-secondary"
-                                        onclick="changeAction('/update/<?= $user->id ?>', ['<?= $user->name ?>', '<?= $user->surname ?>','<?= $user->role ?>', '<?= $user->status?>'], 'Update')" data-bs-toggle="modal"
+                                        onclick="changeAction('/update/<?= $user->id ?>', 'Update', ['<?= $user->name ?>', '<?= $user->surname ?>','<?= $user->role ?>', '<?= $user->status?>'])" data-bs-toggle="modal"
                                         data-bs-target="#createOrUpdate">Edit
                                 </button>
 

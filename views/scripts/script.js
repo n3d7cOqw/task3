@@ -23,20 +23,20 @@ function changeActionSingleDelete (action, user) {
   form.action = action
 }
 
-function changeAction (action, info = null, msg = "") {
+function changeAction (action,  msg = "", info = null) {
   elem.action = action
+  document.getElementById("createUpdateModalSubmitButton").innerHTML = msg;
+  document.getElementById("createUpdateModalTitle").innerHTML = msg +" User";
   if (info != null){
     const name = document.getElementById("name");
     const last_name = document.getElementById("last_name");
     const role = document.getElementById("role");
     const status = document.getElementById("status");
-    document.getElementById("createUpdateModalSubmitButton").innerHTML = msg;
-    document.getElementById("createUpdateModalTitle").innerHTML = msg +" User";
     name.value = info[0];
+
     last_name.value = info[1];
     role.value = info[2];
     status.checked = info[3] == "on";
-    console.log(document.getElementById("status").value)
   }
 }
 

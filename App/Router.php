@@ -14,15 +14,13 @@ class Router
         ];
     }
 
-    public static function post(string $uri, string $class, string $method, bool $form_data = false, bool $files = false)
+    public static function post(string $uri, string $class, string $method)
     {
         self::$routes[] = [
             "uri" => $uri,
             "class" => $class,
             "method" => $method,
             "post" => true,
-            "form_data" => $form_data,
-            "files" => $files
         ];
     }
 
@@ -35,15 +33,7 @@ class Router
 
                     $action = new $route["class"];
                     $method = $route["method"];
-                    if ($route["form_data"]){
-
-                        $action->$method($_POST);
-
-                    }else{
-                            $action->$method();
-//                        $action->$method($_POST);
-
-                    }
+                    $action->$method();
                     die();
                 } else {
                     require_once "views/".$route["page"].".php";
