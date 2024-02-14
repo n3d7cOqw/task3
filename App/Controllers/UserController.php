@@ -15,9 +15,7 @@ class UserController
         $user->name = $_POST["name"];
         $user->surname = $_POST["surname"];
         $user->role = $_POST["role"];
-        if (isset($_POST["status"])) {
-            $user->status = $_POST["status"];
-        }
+        $user->status = $_POST["status"] ?? "off";
 
         if (strlen(trim($_POST["name"]) > 1) && strlen(trim($_POST["surname"]) > 1) && $_POST["role"] != 0) {
             $user->save();
@@ -29,6 +27,7 @@ class UserController
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
                     "status" => $_POST["status"] ?? "off",
+                    "role" => $_POST["role"]
                 ],
             ];
             echo json_encode($response);
@@ -61,6 +60,8 @@ class UserController
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
                     "status" => $_POST["status"] ?? "off",
+                    "role" => $_POST["role"]
+
                 ],
             ];
             echo json_encode($response);

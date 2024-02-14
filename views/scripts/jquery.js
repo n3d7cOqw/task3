@@ -1,17 +1,70 @@
 $(document).ready(function () {
   $('#deleteForm').on('submit', function (event) {
     event.preventDefault()
-    const action = document.getElementById("deleteForm").action
-    closeModal('#deleteModal');
-    $.post(action, $(this).serialize())
+    const action = document.getElementById('deleteForm').action
+    closeModal('#deleteModal')
+    $.post(action, $(this).serialize(), function (data){
+      data = JSON.parse(data)
+      document.getElementById(data.id).style.display = "none"
+    })
   })
 })
 
 $(document).ready(function () {
   $('#createOrUpdateForm').on('submit', function (event) {
     event.preventDefault()
-    closeModal("#createOrUpdate");
-    $.post(elem.action, $(this).serialize())
+
+    console.log($(this).serialize())
+    closeModal('#createOrUpdate')
+    $.post(elem.action, $(this).serialize(), function (data) {
+
+      // try {
+        const form = document.querySelector('#createOrUpdateForm')
+        data = JSON.parse(data)
+        const action = form.action.split('/')[3]
+
+        if (data.status == false) {
+          const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+          msg = document.querySelector('.modal-body-alert')
+          msg.innerHTML = 'Fill form correctly'
+          modal.show()
+        }
+
+        if (action === 'store') {
+
+          const tbody = document.querySelector('table')
+          console.log(data.user.status)
+          const status = data.user.status === 'on' ? '<div style="width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
+            : '<div style="width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
+          tbody.insertAdjacentHTML('beforeend', `<tr id="${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${data.user.role}</td><td id="status">${status} </td> <td><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate">Edit</button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteModal"><img src="/pictures/delete.svg" width="25" height="20" alt=""></div></div></td>`)
+        } else {
+          const tr = document.getElementById(data.user.id)
+          const full_name = tr.querySelector('#full_name')
+          const role = tr.querySelector('#user_role')
+          const status = tr.querySelector('#status')
+
+          full_name.innerHTML = data.user.name + ' ' + data.user.surname
+          role.innerHTML = data.user.role
+          console.log(data.user.status)
+          if (data.user.status === 'on') {
+            status.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          } else {
+            status.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          }
+
+        }
+      // } catch (e) {
+      //   const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+      //   msg = document.querySelector('.modal-body-alert')
+      //   msg.innerHTML = 'Fill form correctly'
+      //   modal.show()
+      // }
+
+    })
+    document.getElementById('name').value = "";
+    document.getElementById('last_name').value = "";
+    document.getElementById('status').checked = false
+    document.getElementById('role').value = '0';
   })
 })
 
@@ -20,10 +73,11 @@ $(document).ready(function () {
     event.preventDefault()
     const checkBoxes = document.querySelectorAll('#selectUser')
     const selectedCheckBoxesIds = []
-    if (document.getElementById("selectAction").value == 0){
-      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`);
-      msg = document.querySelector(".modal-body-alert");
-      msg.innerHTML = "Select action!"
+
+    if (document.getElementById('selectAction').value == 0) {
+      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+      msg = document.querySelector('.modal-body-alert')
+      msg.innerHTML = 'Select action!'
       modal.show()
     }
 
@@ -33,28 +87,112 @@ $(document).ready(function () {
       }
     })
 
-    if (selectedCheckBoxesIds.length === 0){
-      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`);
-      const msg = document.querySelector(".modal-body-alert");
-      msg.innerHTML = "Select users!"
+    if (selectedCheckBoxesIds.length === 0) {
+      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+      const msg = document.querySelector('.modal-body-alert')
+      msg.innerHTML = 'Select users!'
       modal.show()
     }
 
-    if (document.getElementById("selectAction").value == "delete" && selectedCheckBoxesIds.length > 0){
-        const form = document.getElementById("deleteMultipleForm");
-        const msg = document.querySelector(".modal-delete-confirm");
-        const modalDelete = bootstrap.Modal.getOrCreateInstance(`#deleteMultipleModal`);
+    if (document.getElementById('selectAction').value == 'delete' && selectedCheckBoxesIds.length > 0) {
+      const form = document.getElementById('deleteMultipleForm')
+      const msg = document.querySelector('.modal-delete-confirm')
+      const modalDelete = bootstrap.Modal.getOrCreateInstance(`#deleteMultipleModal`)
 
-        msg.innerHTML = "Are you sure that you want delete " + selectedCheckBoxesIds.length + " users?"
-        form.action = "/multiple-edit"
-        modalDelete.show();
-        $('#deleteMultipleForm').on('submit', function (event) {
-          event.preventDefault()
-          closeModal('#deleteMultipleModal');
-          $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() })
-        });
-    }else{
-      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() })
+      msg.innerHTML = 'Are you sure that you want delete ' + selectedCheckBoxesIds.length + ' users?'
+      form.action = '/multiple-edit'
+      modalDelete.show()
+      $('#deleteMultipleForm').on('submit', function (event) {
+        event.preventDefault()
+        closeModal('#deleteMultipleModal')
+        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data){
+          data = JSON.parse(data)
+          data.forEach(function (item){
+            document.getElementById(item.id).style.display = "none"
+          })
+        })
+      })
+    } else {
+      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val()}, function (data) {
+          data = JSON.parse(data)
+
+          data.forEach(function (item){
+              const tr = document.getElementById(item.id)
+              if (item.user_status === "on"){
+                tr.querySelector("#status").innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              }else{
+                tr.querySelector("#status").innerHTML ='<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              }
+          })
+      })
     }
   })
 })
+
+
+
+
+$(document).ready(function () {
+  $('#bottomMultipleEdit').on('submit', function (event) {
+    event.preventDefault()
+    const checkBoxes = document.querySelectorAll('#selectUser')
+    let selectedCheckBoxesIds = []
+
+    if (document.getElementById('bottomSelectAction').value == 0) {
+      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+      msg = document.querySelector('.modal-body-alert')
+      msg.innerHTML = 'Select action!'
+      modal.show()
+    }
+
+    checkBoxes.forEach(function (elem) {
+      if (elem.checked) {
+        selectedCheckBoxesIds.push(elem.value)
+      }
+    })
+
+    if (selectedCheckBoxesIds.length === 0) {
+      const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
+      const msg = document.querySelector('.modal-body-alert')
+      msg.innerHTML = 'Select users!'
+      modal.show()
+    }
+
+    if (document.getElementById('bottomSelectAction').value == 'delete' && selectedCheckBoxesIds.length > 0) {
+      const form = document.getElementById('deleteMultipleForm')
+      const msg = document.querySelector('.modal-delete-confirm')
+      const modalDelete = bootstrap.Modal.getOrCreateInstance(`#deleteMultipleModal`)
+
+      msg.innerHTML = 'Are you sure that you want delete ' + selectedCheckBoxesIds.length + ' users?'
+      form.action = '/multiple-edit'
+      modalDelete.show()
+      $('#deleteMultipleForm').on('submit', function (event) {
+        event.preventDefault()
+        closeModal('#deleteMultipleModal')
+        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data){
+          data = JSON.parse(data)
+          data.forEach(function (item){
+            document.getElementById(item.id).remove()
+            selectedCheckBoxesIds = []
+            // document.getElementById(item.id).checked = false
+          })
+        })
+      })
+    } else {
+      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val()}, function (data) {
+        data = JSON.parse(data)
+        data.forEach(function (item){
+          const tr = document.getElementById(item.id)
+          console.log(item.user_status)
+          if (item.user_status === "on"){
+            tr.querySelector("#status").innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          }else{
+            console.log(tr.querySelector("#status"))
+            tr.querySelector("#status").innerHTML ='<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          }
+        })
+      })
+    }
+  })
+})
+

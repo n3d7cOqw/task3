@@ -52,15 +52,15 @@ $users = \App\Models\User::all();
             <?php
             foreach ($users as $user) {
                 ?>
-                <tr>
+                <tr id="<?= $user->id ?>">
                     <th scope="row">
                         <div>
                             <input class="form-check-input" type="checkbox" id="selectUser" value="<?= $user->id ?>">
                         </div>
                     </th>
-                    <td><?= $user->name ?> <?= $user->surname ?></td>
-                    <td><?= $user->role ?></td>
-                    <td><?php
+                    <td id="full_name"><?= $user->name ?> <?= $user->surname ?></td>
+                    <td id="user_role"><?= $user->role ?></td>
+                    <td id="status"><?php
                         if ($user->status == "off") {
                             ?>
                             <div style="width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;
@@ -96,8 +96,24 @@ $users = \App\Models\User::all();
             </tbody>
         </table>
     </section>
+<section class="lowerMenu">
+    <div class="actions d-flex my-2">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createOrUpdate"
+                onclick="changeAction('/store','Add')">
+            Add
+        </button>
+        <form action="" class="d-flex mx-2" id="bottomMultipleEdit">
+            <select class="form-select" id="bottomSelectAction" name="selectAction">
+                <option value="0">-Please-Select-</option>
+                <option value="on">Set Active</option>
+                <option value="off">Set Not Active</option>
+                <option value="delete">Delete</option>
+            </select>
+            <button type="submit" class="btn btn-primary mx-2">ok</button>
+        </form>
+    </div>
+</section>
 </div>
-
 <?php require_once "views/layouts/alertModal.php"?>
 <?php require_once "views/layouts/deleteMultipleModal.php"?>
 

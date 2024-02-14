@@ -1,8 +1,28 @@
 const elem = document.getElementById('createOrUpdateForm')
 
+window.addEventListener("click", function (e){
+
+  const checkBoxes = document.querySelectorAll("#selectUser")
+  const selected = []
+  const selectAll = document.getElementById("selectAllCheckbox")
+
+  checkBoxes.forEach(function (elem) {
+    if (elem.checked) {
+      selected.push(elem.value)
+    }
+  })
+
+  if (e.target.id  == "selectUser" ){
+    selectAll.value = checkBoxes.length === selected.length ? "on" : "off"
+    selectAll.checked = checkBoxes.length === selected.length
+  }
+})
+
 function changeCheckBoxCondition (event) {
   const checkBox = document.getElementById('selectAllCheckbox')
   const checkBoxes = document.querySelectorAll('#selectUser')
+
+
   if (checkBox.value === 'off') {
     checkBoxes.forEach(function (elem) {
       elem.checked = true
@@ -44,3 +64,12 @@ function closeModal (elem) {
   const modal = bootstrap.Modal.getOrCreateInstance(`${elem}`);
   modal.hide()
 }
+
+document.getElementById("selectAction").addEventListener("change", function (e){
+  document.getElementById("bottomSelectAction").value = this.value
+})
+
+document.getElementById("bottomSelectAction").addEventListener("change", function (e){
+  document.getElementById("selectAction").value = this.value
+
+})
