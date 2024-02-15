@@ -10,10 +10,13 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">First name</label>
                         <input type="text" min="8" class="form-control" id="name" name="name">
+                        <div class="invalid-feedback d-block" id="name_error" ></div>
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Last name</label>
                         <input type="text" min="8" class="form-control" id="last_name" name="surname">
+                        <div class="invalid-feedback d-block" id="surname_error"></div>
+
                     </div>
                     <div class="mb-3">
                         <div class="form-check form-switch">
@@ -28,6 +31,7 @@
                             <option value="Admin">Admin</option>
                             <option value="User">User</option>
                         </select>
+                        <div class="invalid-feedback d-block" id="role_error"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

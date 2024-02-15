@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 $users = \App\Models\User::all();
 ?>
 <!doctype html>
@@ -63,7 +63,7 @@ $users = \App\Models\User::all();
                     <td id="status"><?php
                         if ($user->status == "off") {
                             ?>
-                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #2c3034; margin-left: auto; margin-right: auto; margin-top: 10px;
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;
  "></div>
                             <?php
                         } else {

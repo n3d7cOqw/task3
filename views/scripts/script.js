@@ -43,7 +43,14 @@ function changeActionSingleDelete (action, user) {
   form.action = action
 }
 
+function deleteErrors(){
+  document.getElementById("name_error").innerHTML = "";
+  document.getElementById("surname_error").innerHTML = "";
+  document.getElementById("role_error").innerHTML = "";
+}
+
 function changeAction (action,  msg = "", info = null) {
+  deleteErrors()
   elem.action = action
   document.getElementById("createUpdateModalSubmitButton").innerHTML = msg;
   document.getElementById("createUpdateModalTitle").innerHTML = msg +" User";
@@ -53,7 +60,6 @@ function changeAction (action,  msg = "", info = null) {
     const role = document.getElementById("role");
     const status = document.getElementById("status");
     name.value = info[0];
-
     last_name.value = info[1];
     role.value = info[2];
     status.checked = info[3] == "on";

@@ -17,7 +17,21 @@ class UserController
         $user->role = $_POST["role"];
         $user->status = $_POST["status"] ?? "off";
 
-        if (strlen(trim($_POST["name"]) > 1) && strlen(trim($_POST["surname"]) > 1) && $_POST["role"] != 0) {
+        $errors = [];
+
+        if (empty(trim($_POST["name"]))){
+            $errors[] = ["name" => "field name is required"];
+        }
+        if (empty(trim($_POST["surname"]))){
+            $errors[] = ["surname" => "field surname is required"];
+        }
+        if (empty(trim($_POST["role"]))){
+            $errors[] = ["role" => "field role is required"];
+        }
+
+
+
+        if (empty($errors)) {
             $user->save();
             $response = [
                 "status" => true,
@@ -34,7 +48,7 @@ class UserController
         } else {
             $response = [
                 "status" => false,
-                "error" => ["code" => 100, "message" => "Validation Error"],
+                "error" => $errors,
             ];
             echo json_encode($response);
         }
