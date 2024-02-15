@@ -18,6 +18,16 @@ window.addEventListener("click", function (e){
   }
 })
 
+function clearForm(form){
+  const clearForm = document.querySelector(form)
+  const inputs = clearForm.querySelectorAll("input")
+  inputs.forEach(elem => elem.value = "")
+  if (form === "#createOrUpdateForm"){
+    document.querySelector("#role").value = "0"
+    document.querySelector("#status").checked = 0
+  }
+}
+
 function changeCheckBoxCondition (event) {
   const checkBox = document.getElementById('selectAllCheckbox')
   const checkBoxes = document.querySelectorAll('#selectUser')
@@ -49,8 +59,10 @@ function deleteErrors(){
   document.getElementById("role_error").innerHTML = "";
 }
 
-function changeAction (action,  msg = "", info = null) {
+function changeAction (action,  msg = "", info = null){
+  clearForm("#createOrUpdateForm")
   deleteErrors()
+
   elem.action = action
   document.getElementById("createUpdateModalSubmitButton").innerHTML = msg;
   document.getElementById("createUpdateModalTitle").innerHTML = msg +" User";

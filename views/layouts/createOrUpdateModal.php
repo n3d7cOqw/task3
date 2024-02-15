@@ -35,8 +35,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary"><span id="createUpdateModalSubmitButton"></span></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deleteErrors()">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="deleteErrors()"><span id="createUpdateModalSubmitButton"></span></button>
                 </div>
             </form>
         </div>

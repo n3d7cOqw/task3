@@ -1,5 +1,4 @@
 <?php
-session_start();
 $users = \App\Models\User::all();
 ?>
 <!doctype html>
@@ -10,6 +9,7 @@ $users = \App\Models\User::all();
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>task 3</title>
 </head>
 <body>
@@ -72,19 +72,24 @@ $users = \App\Models\User::all();
 
                             <?php
                         } ?></td>
-                    <td>
-                        <div class="btn-toolbar justify-content-between" role="toolbar"
-                             aria-label="Toolbar with button groups">
+                    <td style=" display: flex; align-items: center; justify-content: center;">
+                        <div class="btn-toolbar" role="toolbar"
+                             aria-label="Toolbar with button groups" >
                             <div class="btn-group" role="group" aria-label="First group">
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary px-1 py-1"
                                         onclick="changeAction('/update/<?= $user->id ?>', 'Update', ['<?= $user->name ?>', '<?= $user->surname ?>','<?= $user->role ?>', '<?= $user->status?>'])" data-bs-toggle="modal"
-                                        data-bs-target="#createOrUpdate">Edit
+                                        data-bs-target="#createOrUpdate">
+                                    <span>
+                                        <i class="bi bi-pencil-square"></i>
+                                    </span>
                                 </button>
 
                                 <button onclick="changeActionSingleDelete('/delete/<?=$user->id?>','<?= $user->name." ".$user->surname ?>')"
-                                        type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                        type="button" class="btn btn-outline-secondary px-1 py-0" data-bs-toggle="modal"
                                         data-bs-target="#deleteModal">
-                                    <img src="/pictures/delete.svg" width="25" height="20" alt="">
+                                    <span>
+                                        <i class="bi bi-trash"></i>
+                                    </span>
                             </div>
                         </div>
 

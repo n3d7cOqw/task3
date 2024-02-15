@@ -57,6 +57,17 @@ class UserController
     public function update()
     {
         $id = explode("/", $_SERVER["QUERY_STRING"])[1];
+        $errors = [];
+
+        if (empty(trim($_POST["name"]))){
+            $errors[] = ["name" => "field name is required"];
+        }
+        if (empty(trim($_POST["surname"]))){
+            $errors[] = ["surname" => "field surname is required"];
+        }
+        if (empty(trim($_POST["role"]))){
+            $errors[] = ["role" => "field role is required"];
+        }
 
         if (strlen(trim($_POST["name"]) > 1) && strlen(trim($_POST["surname"]) > 1) && $_POST["role"] != 0) {
             User::where('id', $id)->update([
@@ -80,9 +91,10 @@ class UserController
             ];
             echo json_encode($response);
         } else {
-            $response = [
-                "status" => false,
-                "error" => ["code" => 100, "message" => "Validation Error"],
+
+                $response = [
+                    "status" => false,
+                    "error" => $errors
             ];
             echo json_encode($response);
         }
@@ -107,19 +119,19 @@ class UserController
     public function multipleEdit()
     {
         $json = [];
-        if ($_POST["action"] === "delete") {
+        if (isset($_POST["ids"]) && $_POST["action"] === "delete") {
             foreach ($_POST["ids"] as $id) {
                 User::where("id", $id)->first()->delete();
                 $json[] = ["status" => true, "error" => null, "id" => $id];
             }
             echo  json_encode($json);
-        } elseif ($_POST["action"] === "off") {
+        } elseif (isset($_POST["ids"]) && $_POST["action"] === "off") {
             foreach ($_POST["ids"] as $id) {
                 User::where("id", $id)->first()->update(["status" => "off"]);
                 $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "off"];
             }
             echo  json_encode($json);
-        } elseif ($_POST["action"] === "on") {
+        } elseif (isset($_POST["ids"]) && $_POST["action"] === "on") {
             foreach ($_POST["ids"] as $id) {
                 User::where("id", $id)->first()->update(["status" => "on"]);
                 $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "on"];

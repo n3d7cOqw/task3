@@ -3,9 +3,9 @@ $(document).ready(function () {
     event.preventDefault()
     const action = document.getElementById('deleteForm').action
     closeModal('#deleteModal')
-    $.post(action, $(this).serialize(), function (data){
+    $.post(action, $(this).serialize(), function (data) {
       data = JSON.parse(data)
-      document.getElementById(data.id).style.display = "none"
+      document.getElementById(data.id).style.display = 'none'
     })
   })
 })
@@ -16,84 +16,66 @@ $(document).ready(function () {
 
     $.post(elem.action, $(this).serialize(), function (data) {
 
-        const form = document.querySelector('#createOrUpdateForm')
+      const form = document.querySelector('#createOrUpdateForm')
 
-        data = JSON.parse(data)
-        const action = form.action.split('/')[3]
+      data = JSON.parse(data)
+      const action = form.action.split('/')[3]
 
-        if(data.error == null){
-          closeModal('#createOrUpdate')
+      if (data.error == null) {
+        closeModal('#createOrUpdate')
+      }
+
+      if (action === 'store' && data.status !== false) {
+        const tbody = document.querySelector('table')
+        const status = data.user.status === 'on' ? '<div style="width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
+          : '<div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
+        tbody.insertAdjacentHTML('beforeend', `<tr id="${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${data.user.role}</td><td id="status">${status} </td> <td><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate">Edit</button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteModal"><img src="/pictures/delete.svg" width="25" height="20" alt=""></div></div></td>`)
+
+        const user_row = document.getElementById(data.user.id)
+        if (document.getElementById('selectAllCheckbox').value === 'on') {
+          user_row.querySelector('#selectUser').checked = true
         }
 
-        if (action === 'store'  && data.status !== false ) {
+      } else if (action === 'update' && data.status !== false) {
 
+        const tr = document.getElementById(data.user.id)
+        const full_name = tr.querySelector('#full_name')
+        const role = tr.querySelector('#user_role')
+        const status_field = tr.querySelector('#status')
 
+        full_name.innerHTML = data.user.name + ' ' + data.user.surname
+        role.innerHTML = data.user.role
 
-          const tbody = document.querySelector('table')
-          const status = data.user.status === 'on' ? '<div style="width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
-            : '<div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
-          tbody.insertAdjacentHTML('beforeend', `<tr id="${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${data.user.role}</td><td id="status">${status} </td> <td><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate">Edit</button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteModal"><img src="/pictures/delete.svg" width="25" height="20" alt=""></div></div></td>`)
-
-          const user_row = document.getElementById(data.user.id)
-          if(document.getElementById("selectAllCheckbox").value === "on"){
-           user_row.querySelector("#selectUser").checked = true;
-          }
-
-
+        if (data.user.status === 'on') {
+          status_field.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+        } else {
+          status_field.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
         }
 
-        else if (action === "update" && data.status !== false){
+        const button = tr.querySelector('button')
 
-          const tr = document.getElementById(data.user.id)
-          const full_name = tr.querySelector('#full_name')
-          const role = tr.querySelector('#user_role')
-          const status_field = tr.querySelector('#status')
-
-          full_name.innerHTML = data.user.name + " " + data.user.surname
-          role.innerHTML = data.user.role
-
-          if (data.user.status === 'on') {
-            status_field.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          }
-
-          else {
-            status_field.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          }
-
-          const button = tr.querySelector("button")
-
-          button.onclick = function() {
-            changeAction('/update/' + data.user.id, 'Update', [data.user.name, data.user.surname, data.user.role, data.user.status]);
-          };
-
+        button.onclick = function () {
+          changeAction('/update/' + data.user.id, 'Update', [data.user.name, data.user.surname, data.user.role, data.user.status])
         }
 
-        else{
-          document.getElementById("name_error").innerHTML = ""
-          document.getElementById("surname_error").innerHTML = ""
-          document.getElementById("role_error").value = "0"
-          data.error.forEach(function (item){
-            const name = Object.keys(item)
-            console.log(`#${name}_error`)
-            console.log(document.querySelector(`#${name}_error`))
-            document.querySelector(`#${name}_error`).innerHTML = item[name]
-          })
+      } else {
+        // deleteErrors()
 
-        }
+        // document.getElementById('name_error').innerHTML = ''
+        // document.getElementById('surname_error').innerHTML = ''
+        // document.getElementById('role_error').value = '0'
+        data.error.forEach(function (item) {
+          const name = Object.keys(item)
+          document.querySelector(`#${name}_error`).innerHTML = item[name]
+        })
 
+      }
 
-      // } catch (e) {
-      //   const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
-      //   msg = document.querySelector('.modal-body-alert')
-      //   msg.innerHTML = 'Fill form correctly'
-      //   modal.show()
-      // }
-
-      if (data.user.name !== undefined && data.user.surname !== undefined && data.user.role !== undefined){
-        document.getElementById('name').value = "";
-      document.getElementById('last_name').value = "";
-      document.getElementById('status').checked = false
-      document.getElementById('role').value = '0';
+      if (data.user !== undefined && data.user.name !== undefined && data.user.surname !== undefined && data.user.role !== undefined) {
+        document.getElementById('name').value = ''
+        document.getElementById('last_name').value = ''
+        document.getElementById('status').checked = false
+        document.getElementById('role').value = '0'
       }
     })
 
@@ -137,32 +119,31 @@ $(document).ready(function () {
       $('#deleteMultipleForm').on('submit', function (event) {
         event.preventDefault()
         closeModal('#deleteMultipleModal')
-        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data){
+        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
           data = JSON.parse(data)
-          data.forEach(function (item){
-            document.getElementById(item.id).style.display = "none"
+          data.forEach(function (item) {
+            document.getElementById(item.id).style.display = 'none'
           })
         })
       })
     } else {
-      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val()}, function (data) {
-          data = JSON.parse(data)
+      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
+        data = JSON.parse(data)
 
-          data.forEach(function (item){
-              const tr = document.getElementById(item.id)
-              if (item.user_status === "on"){
-                tr.querySelector("#status").innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-              }else{
-                tr.querySelector("#status").innerHTML ='<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-              }
-          })
+        if (data.status !== false) {
+        data.forEach(function (item) {
+          const tr = document.getElementById(item.id)
+          if (item.user_status === 'on') {
+            tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          } else {
+            tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+          }
+        })
+        }
       })
     }
   })
 })
-
-
-
 
 $(document).ready(function () {
   $('#bottomMultipleEdit').on('submit', function (event) {
@@ -201,9 +182,12 @@ $(document).ready(function () {
       $('#deleteMultipleForm').on('submit', function (event) {
         event.preventDefault()
         closeModal('#deleteMultipleModal')
-        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data){
+        $.post('/multiple-edit', {
+          ids: selectedCheckBoxesIds,
+          action: $('#bottomSelectAction').val()
+        }, function (data) {
           data = JSON.parse(data)
-          data.forEach(function (item){
+          data.forEach(function (item) {
             document.getElementById(item.id).remove()
             selectedCheckBoxesIds = []
             // document.getElementById(item.id).checked = false
@@ -211,18 +195,19 @@ $(document).ready(function () {
         })
       })
     } else {
-      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val()}, function (data) {
+      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data) {
         data = JSON.parse(data)
-        data.forEach(function (item){
-          const tr = document.getElementById(item.id)
-          console.log(item.user_status)
-          if (item.user_status === "on"){
-            tr.querySelector("#status").innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          }else{
-            console.log(tr.querySelector("#status"))
-            tr.querySelector("#status").innerHTML ='<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          }
-        })
+        if (data.status !== false) {
+
+          data.forEach(function (item) {
+            const tr = document.getElementById(item.id)
+            if (item.user_status === 'on') {
+              tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+            } else {
+              tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+            }
+          })
+        }
       })
     }
   })
