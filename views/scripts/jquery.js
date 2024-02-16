@@ -135,7 +135,6 @@ $(document).ready(function () {
           }else {
             document.getElementById(data[0].id).remove()
           }
-          // selectedCheckBoxesIds = []
         })
       })
     } else {
