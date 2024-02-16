@@ -5,7 +5,8 @@ $(document).ready(function () {
     closeModal('#deleteModal')
     $.post(action, $(this).serialize(), function (data) {
       data = JSON.parse(data)
-      document.getElementById(data.id).style.display = 'none'
+      // document.getElementById(data.id).style.display = 'none'
+      document.getElementById(data.id).remove()
     })
   })
 })
@@ -43,6 +44,7 @@ $(document).ready(function () {
         const full_name = tr.querySelector('#full_name')
         const role = tr.querySelector('#user_role')
         const status_field = tr.querySelector('#status')
+        tr.querySelectorAll("button")[1].onclick = changeActionSingleDelete("/delete/" + data.user.id,  `${data.user.name} ${data.user.surname}`)
 
         full_name.innerHTML = data.user.name + ' ' + data.user.surname
         role.innerHTML = data.user.role
@@ -87,7 +89,7 @@ $(document).ready(function () {
   $('#multipleEdit').on('submit', function (event) {
     event.preventDefault()
     const checkBoxes = document.querySelectorAll('#selectUser')
-    const selectedCheckBoxesIds = []
+    let selectedCheckBoxesIds = []
 
     if (document.getElementById('selectAction').value == 0) {
       const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
@@ -117,14 +119,23 @@ $(document).ready(function () {
       msg.innerHTML = 'Are you sure that you want delete ' + selectedCheckBoxesIds.length + ' users?'
       form.action = '/multiple-edit'
       modalDelete.show()
+
+      $('#deleteMultipleForm').off('submit')
+
       $('#deleteMultipleForm').on('submit', function (event) {
         event.preventDefault()
         closeModal('#deleteMultipleModal')
         $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
           data = JSON.parse(data)
-          data.forEach(function (item) {
-            document.getElementById(item.id).style.display = 'none'
-          })
+
+          if (data.length > 1){
+            data.forEach(function (item) {
+              document.getElementById(item.id).remove()
+            })
+          }else {
+            document.getElementById(data[0].id).remove()
+          }
+          // selectedCheckBoxesIds = []
         })
       })
     } else {
@@ -132,19 +143,20 @@ $(document).ready(function () {
         data = JSON.parse(data)
 
         if (data.status !== false) {
-        data.forEach(function (item) {
-          const tr = document.getElementById(item.id)
-          if (item.user_status === 'on') {
-            tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          } else {
-            tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
-          }
-        })
+          data.forEach(function (item) {
+            const tr = document.getElementById(item.id)
+            if (item.user_status === 'on') {
+              tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+            } else {
+              tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+            }
+          })
         }
       })
     }
   })
 })
+
 
 $(document).ready(function () {
   $('#bottomMultipleEdit').on('submit', function (event) {
@@ -172,6 +184,8 @@ $(document).ready(function () {
       modal.show()
     }
 
+
+
     if (document.getElementById('bottomSelectAction').value == 'delete' && selectedCheckBoxesIds.length > 0) {
       const form = document.getElementById('deleteMultipleForm')
       const msg = document.querySelector('.modal-delete-confirm')
@@ -180,6 +194,9 @@ $(document).ready(function () {
       msg.innerHTML = 'Are you sure that you want delete ' + selectedCheckBoxesIds.length + ' users?'
       form.action = '/multiple-edit'
       modalDelete.show()
+
+      $('#deleteMultipleForm').off('submit')
+
       $('#deleteMultipleForm').on('submit', function (event) {
         event.preventDefault()
         closeModal('#deleteMultipleModal')
@@ -188,11 +205,14 @@ $(document).ready(function () {
           action: $('#bottomSelectAction').val()
         }, function (data) {
           data = JSON.parse(data)
-          data.forEach(function (item) {
-            document.getElementById(item.id).remove()
-            selectedCheckBoxesIds = []
-            // document.getElementById(item.id).checked = false
-          })
+          selectedCheckBoxesIds = []
+          if (data.length > 1){
+            data.forEach(function (item) {
+              document.getElementById(item.id).remove()
+            })
+          }else {
+            document.getElementById(data[0].id).remove()
+          }
         })
       })
     } else {
