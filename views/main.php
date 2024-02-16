@@ -78,18 +78,12 @@ $users = \App\Models\User::all();
                             <div class="btn-group" role="group" aria-label="First group">
                                 <button type="button" class="btn btn-outline-secondary px-1 py-1"
                                         onclick="changeAction('/update/<?= $user->id ?>', 'Update', ['<?= $user->name ?>', '<?= $user->surname ?>','<?= $user->role ?>', '<?= $user->status?>'])" data-bs-toggle="modal"
-                                        data-bs-target="#createOrUpdate">
-                                    <span>
-                                        <i class="bi bi-pencil-square"></i>
-                                    </span>
+                                        data-bs-target="#createOrUpdate"><span><i class="bi bi-pencil-square"></i></span>
                                 </button>
 
                                 <button onclick="changeActionSingleDelete('/delete/<?=$user->id?>','<?= $user->name." ".$user->surname ?>')"
-                                        type="button" class="btn btn-outline-secondary px-1 py-0" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">
-                                    <span>
-                                        <i class="bi bi-trash"></i>
-                                    </span>
+                                        type="button" class="btn btn-outline-secondary px-1 py-1" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"><span><i class="bi bi-trash"></i></span>
                             </div>
                         </div>
 

@@ -14,10 +14,11 @@ $(document).ready(function () {
   $('#createOrUpdateForm').on('submit', function (event) {
     event.preventDefault()
 
-    $.post(elem.action, $(this).serialize(), function (data) {
+    let postStatus = document.getElementById("status").checked ? "on" : "off"
+
+    $.post(elem.action, {name: $("#name").val(), surname: $("#last_name").val(), role: $("#role").val(), status: postStatus}, function (data) {
 
       const form = document.querySelector('#createOrUpdateForm')
-
       data = JSON.parse(data)
       const action = form.action.split('/')[3]
 
@@ -29,7 +30,7 @@ $(document).ready(function () {
         const tbody = document.querySelector('table')
         const status = data.user.status === 'on' ? '<div style="width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
           : '<div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
-        tbody.insertAdjacentHTML('beforeend', `<tr id="${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${data.user.role}</td><td id="status">${status} </td> <td><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate">Edit</button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteModal"><img src="/pictures/delete.svg" width="25" height="20" alt=""></div></div></td>`)
+        tbody.insertAdjacentHTML('beforeend', `<tr id="${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${data.user.role}</td><td id="status">${status} </td> <td style=" display: flex; align-items: center; justify-content: center;"><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary px-1 py-1" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate"><span><i class="bi bi-pencil-square"></i></span></button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary px-1 py-1" data-bs-toggle="modal" data-bs-target="#deleteModal"><span><i class="bi bi-trash"></i></span></div></div></td>`)
 
         const user_row = document.getElementById(data.user.id)
         if (document.getElementById('selectAllCheckbox').value === 'on') {

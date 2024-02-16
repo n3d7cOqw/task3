@@ -83,11 +83,3 @@ function closeModal (elem) {
   modal.hide()
 }
 
-document.getElementById("selectAction").addEventListener("change", function (e){
-  document.getElementById("bottomSelectAction").value = this.value
-})
-
-document.getElementById("bottomSelectAction").addEventListener("change", function (e){
-  document.getElementById("selectAction").value = this.value
-
-})
