@@ -5,8 +5,12 @@ $(document).ready(function () {
     closeModal('#deleteModal')
     $.post(action, $(this).serialize(), function (data) {
       data = JSON.parse(data)
-      // document.getElementById(data.id).style.display = 'none'
-      document.getElementById(data.id).remove()
+      if (data.status === true){
+        document.getElementById(data.id).remove()
+      }else{
+        const modal = bootstrap.Modal.getOrCreateInstance(`#errorAlert`)
+        modal.show()
+      }
     })
   })
 })
@@ -15,9 +19,14 @@ $(document).ready(function () {
   $('#createOrUpdateForm').on('submit', function (event) {
     event.preventDefault()
 
-    let postStatus = document.getElementById("status").checked ? "on" : "off"
+    let postStatus = document.getElementById('status').checked ? 'on' : 'off'
 
-    $.post(elem.action, {name: $("#name").val(), surname: $("#last_name").val(), role: $("#role").val(), status: postStatus}, function (data) {
+    $.post(elem.action, {
+      name: $('#name').val(),
+      surname: $('#last_name').val(),
+      role: $('#role').val(),
+      status: postStatus
+    }, function (data) {
 
       const form = document.querySelector('#createOrUpdateForm')
       data = JSON.parse(data)
@@ -44,7 +53,7 @@ $(document).ready(function () {
         const full_name = tr.querySelector('#full_name')
         const role = tr.querySelector('#user_role')
         const status_field = tr.querySelector('#status')
-        tr.querySelectorAll("button")[1].onclick = changeActionSingleDelete("/delete/" + data.user.id,  `${data.user.name} ${data.user.surname}`)
+        const button = tr.querySelector('button')
 
         full_name.innerHTML = data.user.name + ' ' + data.user.surname
         role.innerHTML = data.user.role
@@ -55,18 +64,13 @@ $(document).ready(function () {
           status_field.innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
         }
 
-        const button = tr.querySelector('button')
-
+        tr.querySelectorAll('button')[1].onclick = changeActionSingleDelete('/delete/' + data.user.id, `${data.user.name} ${data.user.surname}`)
         button.onclick = function () {
           changeAction('/update/' + data.user.id, 'Update', [data.user.name, data.user.surname, data.user.role, data.user.status])
         }
 
       } else {
-        // deleteErrors()
-
-        // document.getElementById('name_error').innerHTML = ''
-        // document.getElementById('surname_error').innerHTML = ''
-        // document.getElementById('role_error').value = '0'
+        console.log(data.error)
         data.error.forEach(function (item) {
           const name = Object.keys(item)
           document.querySelector(`#${name}_error`).innerHTML = item[name]
@@ -76,6 +80,7 @@ $(document).ready(function () {
 
       if (data.user !== undefined && data.user.name !== undefined && data.user.surname !== undefined && data.user.role !== undefined) {
         document.getElementById('name').value = ''
+        document.getElementById('last_name').value = ''
         document.getElementById('last_name').value = ''
         document.getElementById('status').checked = false
         document.getElementById('role').value = '0'
@@ -128,11 +133,13 @@ $(document).ready(function () {
         $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
           data = JSON.parse(data)
 
-          if (data.length > 1){
+          if (data.length > 1) {
             data.forEach(function (item) {
+              if (item.status !== false){
               document.getElementById(item.id).remove()
+              }
             })
-          }else {
+          } else if (data.length === 1 && data[0].status !== false) {
             document.getElementById(data[0].id).remove()
           }
         })
@@ -141,21 +148,20 @@ $(document).ready(function () {
       $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
         data = JSON.parse(data)
 
-        if (data.status !== false) {
-          data.forEach(function (item) {
+        data.forEach(function (item) {
+          if (item.status !== false) {
             const tr = document.getElementById(item.id)
             if (item.user_status === 'on') {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
             } else {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
             }
-          })
-        }
+          }
+        })
       })
     }
   })
 })
-
 
 $(document).ready(function () {
   $('#bottomMultipleEdit').on('submit', function (event) {
@@ -183,8 +189,6 @@ $(document).ready(function () {
       modal.show()
     }
 
-
-
     if (document.getElementById('bottomSelectAction').value == 'delete' && selectedCheckBoxesIds.length > 0) {
       const form = document.getElementById('deleteMultipleForm')
       const msg = document.querySelector('.modal-delete-confirm')
@@ -205,11 +209,13 @@ $(document).ready(function () {
         }, function (data) {
           data = JSON.parse(data)
           selectedCheckBoxesIds = []
-          if (data.length > 1){
+          if (data.length > 1) {
             data.forEach(function (item) {
-              document.getElementById(item.id).remove()
+              if (item.status !== false){
+                document.getElementById(item.id).remove()
+              }
             })
-          }else {
+          } else if (data.length === 1 && data[0].status !== false) {
             document.getElementById(data[0].id).remove()
           }
         })
@@ -217,17 +223,19 @@ $(document).ready(function () {
     } else {
       $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data) {
         data = JSON.parse(data)
-        if (data.status !== false) {
 
-          data.forEach(function (item) {
-            const tr = document.getElementById(item.id)
+        data.forEach(function (item) {
+          const tr = document.getElementById(item.id)
+          if (item.status !== false) {
+
             if (item.user_status === 'on') {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
             } else {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
             }
-          })
-        }
+          }
+        })
+
       })
     }
   })

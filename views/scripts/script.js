@@ -57,6 +57,8 @@ function deleteErrors(){
   document.getElementById("name_error").innerHTML = "";
   document.getElementById("surname_error").innerHTML = "";
   document.getElementById("role_error").innerHTML = "";
+  document.getElementById('user_error').innerHTML = "";
+
 }
 
 function changeAction (action,  msg = "", info = null){
@@ -80,6 +82,7 @@ function changeAction (action,  msg = "", info = null){
 
 function closeModal (elem) {
   const modal = bootstrap.Modal.getOrCreateInstance(`${elem}`);
+  deleteErrors()
   modal.hide()
 }
 

@@ -115,6 +115,7 @@ $users = \App\Models\User::all();
 </div>
 <?php require_once "views/layouts/alertModal.php"?>
 <?php require_once "views/layouts/deleteMultipleModal.php"?>
+<?php require_once "views/layouts/errorAlert.php"?>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

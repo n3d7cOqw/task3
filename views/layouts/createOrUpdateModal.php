@@ -32,6 +32,7 @@
                             <option value="User">User</option>
                         </select>
                         <div class="invalid-feedback d-block" id="role_error"></div>
+                        <div class="invalid-feedback d-block" id="user_error"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

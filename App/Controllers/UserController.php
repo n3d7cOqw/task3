@@ -19,16 +19,15 @@ class UserController
 
         $errors = [];
 
-        if (empty(trim($_POST["name"]))){
+        if (empty(trim($_POST["name"]))) {
             $errors[] = ["name" => "field name is required"];
         }
-        if (empty(trim($_POST["surname"]))){
+        if (empty(trim($_POST["surname"]))) {
             $errors[] = ["surname" => "field surname is required"];
         }
-        if (empty(trim($_POST["role"]))){
+        if (empty(trim($_POST["role"]))) {
             $errors[] = ["role" => "field role is required"];
         }
-
 
 
         if (empty($errors)) {
@@ -41,7 +40,7 @@ class UserController
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
                     "status" => $_POST["status"] ?? "off",
-                    "role" => $_POST["role"]
+                    "role" => $_POST["role"],
                 ],
             ];
             echo json_encode($response);
@@ -57,55 +56,56 @@ class UserController
     public function update()
     {
         $id = explode("/", $_SERVER["QUERY_STRING"])[1];
-        $errors = [];
+        if (User::where('id', $id)->first() === null) {
+            echo json_encode(["status" => false, "error" => [["user" => "user not found, please refresh the page"]]]);
+        } else {
+            $errors = [];
 
-        if (empty(trim($_POST["name"]))){
-            $errors[] = ["name" => "field name is required"];
-        }
-        if (empty(trim($_POST["surname"]))){
-            $errors[] = ["surname" => "field surname is required"];
-        }
-        if (empty(trim($_POST["role"]))){
-            $errors[] = ["role" => "field role is required"];
-        }
+            if (empty(trim($_POST["name"]))) {
+                $errors[] = ["name" => "field name is required"];
+            }
+            if (empty(trim($_POST["surname"]))) {
+                $errors[] = ["surname" => "field surname is required"];
+            }
+            if (empty(trim($_POST["role"]))) {
+                $errors[] = ["role" => "field role is required"];
+            }
 
-        if (strlen(trim($_POST["name"]) > 1) && strlen(trim($_POST["surname"]) > 1) && $_POST["role"] != 0) {
-            User::where('id', $id)->update([
-                "name" => $_POST["name"],
-                "surname" => $_POST["surname"],
-                "role" => $_POST["role"],
-                "status" => $_POST["status"] ?? "off",
-            ]);
-
-            $response = [
-                "status" => true,
-                "error" => null,
-                "user" => [
-                    "id" => $id,
+            if (strlen(trim($_POST["name"]) > 1) && strlen(trim($_POST["surname"]) > 1) && $_POST["role"] != 0) {
+                User::where('id', $id)->update([
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
+                    "role" => $_POST["role"],
                     "status" => $_POST["status"] ?? "off",
-                    "role" => $_POST["role"]
-
-                ],
-            ];
-            echo json_encode($response);
-        } else {
+                ]);
 
                 $response = [
+                    "status" => true,
+                    "error" => null,
+                    "user" => [
+                        "id" => $id,
+                        "name" => $_POST["name"],
+                        "surname" => $_POST["surname"],
+                        "status" => $_POST["status"] ?? "off",
+                        "role" => $_POST["role"],
+
+                    ],
+                ];
+                echo json_encode($response);
+            } else {
+                $response = [
                     "status" => false,
-                    "error" => $errors
-            ];
-            echo json_encode($response);
+                    "error" => $errors,
+                ];
+                echo json_encode($response);
+            }
         }
     }
 
     public function delete()
     {
         $id = explode("/", $_SERVER["QUERY_STRING"])[1];
-        if (User::where("id", $id)->first()->delete()) {
-            echo json_encode(["status" => true, "error" => null, "id" => $id]);
-        } else {
+        if (User::where('id', $id)->first() === null) {
             echo json_encode([
                 "status" => false,
                 "error" => [
@@ -113,6 +113,10 @@ class UserController
                     "message" => "not found user",
                 ],
             ]);
+        } else {
+            if (User::where("id", $id)->first()->delete()) {
+                echo json_encode(["status" => true, "error" => null, "id" => $id]);
+            }
         }
     }
 
@@ -121,22 +125,34 @@ class UserController
         $json = [];
         if (isset($_POST["ids"]) && $_POST["action"] === "delete") {
             foreach ($_POST["ids"] as $id) {
-                User::where("id", $id)->first()->delete();
-                $json[] = ["status" => true, "error" => null, "id" => $id];
+                if (($user = User::where("id", $id)->first()) !== null) {
+                    $user->delete();
+                    $json[] = ["status" => true, "error" => null, "id" => $id];
+                } else {
+                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+                }
             }
-            echo  json_encode($json);
+            echo json_encode($json);
         } elseif (isset($_POST["ids"]) && $_POST["action"] === "off") {
             foreach ($_POST["ids"] as $id) {
-                User::where("id", $id)->first()->update(["status" => "off"]);
-                $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "off"];
+                if (($user = User::where("id", $id)->first()) !== null) {
+                    $user->update(["status" => "off"]);
+                    $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "off"];
+                } else {
+                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+                }
             }
-            echo  json_encode($json);
+            echo json_encode($json);
         } elseif (isset($_POST["ids"]) && $_POST["action"] === "on") {
             foreach ($_POST["ids"] as $id) {
-                User::where("id", $id)->first()->update(["status" => "on"]);
-                $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "on"];
+                if (($user = User::where("id", $id)->first()) !== null) {
+                    $user->update(["status" => "on"]);
+                    $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "on"];
+                } else {
+                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+                }
             }
-            echo  json_encode($json);
+            echo json_encode($json);
         } else {
             echo json_encode([
                 "status" => false,
