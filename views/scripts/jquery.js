@@ -147,14 +147,24 @@ $(document).ready(function () {
     } else {
       $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#selectAction').val() }, function (data) {
         data = JSON.parse(data)
-
         data.forEach(function (item) {
+          const tr = document.getElementById(item.id)
+          let full_name = tr.querySelector("#full_name").innerHTML
+          full_name = full_name.split(" ")
+          const name = full_name[0]
+          const surname = full_name[1]
+          console.log(tr.querySelector("#user_role"))
+          const role = tr.querySelector("#user_role").innerHTML
           if (item.status !== false) {
-            const tr = document.getElementById(item.id)
+
             if (item.user_status === 'on') {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              tr.querySelector("button").onclick  = changeAction('/update/' + item.id, 'Update', [name, surname, role, "on"])
+
             } else {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              tr.querySelector("button").onclick  = changeAction('/update/' + item.id, 'Update', [name, surname, role, "off"])
+
             }
           }
         })
@@ -226,12 +236,22 @@ $(document).ready(function () {
 
         data.forEach(function (item) {
           const tr = document.getElementById(item.id)
+          let full_name = tr.querySelector("#full_name").innerHTML
+          full_name = full_name.split(" ")
+          const name = full_name[0]
+          const surname = full_name[1]
+          console.log(tr.querySelector("#user_role"))
+          const role = tr.querySelector("#user_role").innerHTML
           if (item.status !== false) {
 
             if (item.user_status === 'on') {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #198754; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              tr.querySelector("button").onclick  = changeAction('/update/' + item.id, 'Update', [name, surname, role, "on"])
+
             } else {
               tr.querySelector('#status').innerHTML = '<div style=\'width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;\'></div>'
+              tr.querySelector("button").onclick  = changeAction('/update/' + item.id, 'Update', [name, surname, role, "off"])
+
             }
           }
         })
