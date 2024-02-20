@@ -47,10 +47,20 @@ function changeCheckBoxCondition (event) {
 }
 
 function changeActionSingleDelete (action, user) {
-  const form = document.getElementById('deleteForm')
-  const div = document.querySelector('.modal-confirm-message')
-  div.innerHTML = 'Are you sure want to delete ' + user
-  form.action = action
+  let id = action.split("/")
+  console.log(document.getElementById("user_" + id[2]))
+  if (document.getElementById("user_" + id[2]) !== null){
+    const form = document.getElementById('deleteForm')
+    const div = document.querySelector('.modal-confirm-message')
+    div.innerHTML = 'Are you sure want to delete ' + user
+    form.action = action
+  }
+  else{
+    document.getElementById('deleteForm').action = "error"
+    const div = document.querySelector('.modal-confirm-message')
+    div.innerHTML = 'Are you sure want to delete ' + user
+  }
+
 }
 
 function deleteErrors(){
@@ -76,7 +86,7 @@ function changeAction (action,  msg = "", info = null){
     name.value = info[0];
     last_name.value = info[1];
     role.value = info[2];
-    status.checked = info[3] == "on";
+    status.checked = info[3] === "1";
   }
 }
 
@@ -84,5 +94,20 @@ function closeModal (elem) {
   const modal = bootstrap.Modal.getOrCreateInstance(`${elem}`);
   deleteErrors()
   modal.hide()
+}
+
+function errorAlertMessage(message){
+  const modal = bootstrap.Modal.getOrCreateInstance(`#errorAlert`)
+  const modalAlertErrorMessage = document.getElementById("modalAlertErrorMessage");
+  modalAlertErrorMessage.innerHTML = message
+  modal.show()
+}
+
+function outInMultiForm (count, value){
+  if (count === 1){
+    return `1 user`
+  }else{
+    return `${count} users`
+  }
 }
 

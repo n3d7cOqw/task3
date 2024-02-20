@@ -15,7 +15,7 @@ class UserController
         $user->name = $_POST["name"];
         $user->surname = $_POST["surname"];
         $user->role = $_POST["role"];
-        $user->status = $_POST["status"] ?? "off";
+        $user->status = $_POST["status"] ?? "0";
 
         $errors = [];
 
@@ -76,7 +76,7 @@ class UserController
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
                     "role" => $_POST["role"],
-                    "status" => $_POST["status"] ?? "off",
+                    "status" => $_POST["status"],
                 ]);
 
                 $response = [
@@ -122,35 +122,48 @@ class UserController
 
     public function multipleEdit()
     {
-        $json = [];
-        if (isset($_POST["ids"]) && $_POST["action"] === "delete") {
+        $json = ["users" => []];
+
+        $validated = true;
+
+        foreach ($_POST["ids"] as $id) {
+            if (($user = User::where("id", $id)->first()) === null) {
+                $validated = false;
+            }
+        }
+
+
+        if (isset($_POST["ids"]) && $_POST["action"] === "delete" && $validated) {
+            $json[] = ["status" => true];
             foreach ($_POST["ids"] as $id) {
-                if (($user = User::where("id", $id)->first()) !== null) {
-                    $user->delete();
-                    $json[] = ["status" => true, "error" => null, "id" => $id];
-                } else {
-                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
-                }
+//                if (($user = User::where("id", $id)->first()) !== null) {
+                User::where("id", $id)->first()->delete();
+                $json["users"][] = ["error" => null, "id" => $id]; //"status" => true,
+//                } else {
+//                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+//                }
             }
             echo json_encode($json);
-        } elseif (isset($_POST["ids"]) && $_POST["action"] === "off") {
+        } elseif (isset($_POST["ids"]) && $_POST["action"] == "0" && $validated) {
+            $json[] = ["status" => true];
             foreach ($_POST["ids"] as $id) {
-                if (($user = User::where("id", $id)->first()) !== null) {
-                    $user->update(["status" => "off"]);
-                    $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "off"];
-                } else {
-                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
-                }
+//                if (($user = User::where("id", $id)->first()) !== null) {
+                User::where("id", $id)->first()->update(["status" => "0"]);
+                $json["users"][] = ["error" => null, "id" => $id, "user_status" => 0];
+//                } else {
+//                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+//                }
             }
             echo json_encode($json);
-        } elseif (isset($_POST["ids"]) && $_POST["action"] === "on") {
+        } elseif (isset($_POST["ids"]) && $_POST["action"] == "1" && $validated) {
+            $json[] = ["status" => true];
             foreach ($_POST["ids"] as $id) {
-                if (($user = User::where("id", $id)->first()) !== null) {
-                    $user->update(["status" => "on"]);
-                    $json[] = ["status" => true, "error" => null, "id" => $id, "user_status" => "on"];
-                } else {
-                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
-                }
+//                if (($user = User::where("id", $id)->first()) !== null) {
+                User::where("id", $id)->first()->update(["status" => "1"]);
+                $json["users"][] = ["error" => null, "id" => $id, "user_status" => 1];
+//                } else {
+//                    $json[] = ["status" => false, "error" => "User not found", "id" => $id];
+//                }
             }
             echo json_encode($json);
         } else {
@@ -162,5 +175,6 @@ class UserController
                 ],
             ]);
         }
+        $validated = true;
     }
 }

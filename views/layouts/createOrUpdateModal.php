@@ -28,8 +28,8 @@
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select" aria-label="Default select example" id="role" name="role">
                             <option value="0">-Please Select-</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
+                            <option value="1">Admin</option>
+                            <option value="2">User</option>
                         </select>
                         <div class="invalid-feedback d-block" id="role_error"></div>
                         <div class="invalid-feedback d-block" id="user_error"></div>

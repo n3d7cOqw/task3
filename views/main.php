@@ -1,5 +1,6 @@
 <?php
 $users = \App\Models\User::all();
+$role = require_once "config/info.php";
 ?>
 <!doctype html>
 <html lang="en">
@@ -22,9 +23,9 @@ $users = \App\Models\User::all();
             </button>
             <form action="" class="d-flex mx-2" id="multipleEdit">
                 <select class="form-select" id="selectAction" name="selectAction">
-                    <option value="0">-Please-Select-</option>
-                    <option value="on">Set Active</option>
-                    <option value="off">Set Not Active</option>
+                    <option value="-1">-Please-Select-</option>
+                    <option value="1">Set Active</option>
+                    <option value="0">Set Not Active</option>
                     <option value="delete">Delete</option>
                 </select>
                 <button type="submit" class="btn btn-primary mx-2">ok</button>
@@ -52,16 +53,16 @@ $users = \App\Models\User::all();
             <?php
             foreach ($users as $user) {
                 ?>
-                <tr id="<?= $user->id ?>">
+                <tr id="user_<?= $user->id ?>">
                     <th scope="row">
                         <div>
                             <input class="form-check-input" type="checkbox" id="selectUser" value="<?= $user->id ?>">
                         </div>
                     </th>
                     <td id="full_name"><?= $user->name ?> <?= $user->surname ?></td>
-                    <td id="user_role"><?= $user->role ?></td>
+                    <td id="user_role"><?= $role["role"][$user->role]?></td>
                     <td id="status"><?php
-                        if ($user->status == "off") {
+                        if ($user->status == "0") {
                             ?>
                             <div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;
  "></div>
@@ -103,9 +104,9 @@ $users = \App\Models\User::all();
         </button>
         <form action="" class="d-flex mx-2" id="bottomMultipleEdit">
             <select class="form-select" id="bottomSelectAction" name="selectAction">
-                <option value="0">-Please-Select-</option>
-                <option value="on">Set Active</option>
-                <option value="off">Set Not Active</option>
+                <option value="-1">-Please-Select-</option>
+                <option value="1">Set Active</option>
+                <option value="0">Set Not Active</option>
                 <option value="delete">Delete</option>
             </select>
             <button type="submit" class="btn btn-primary mx-2">ok</button>
