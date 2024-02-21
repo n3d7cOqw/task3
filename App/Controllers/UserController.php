@@ -15,8 +15,7 @@ class UserController
         $user->name = $_POST["name"];
         $user->surname = $_POST["surname"];
         $user->role = $_POST["role"];
-        $user->status = $_POST["status"] ?? "0";
-
+        $user->status = $_POST["status"];;
         $errors = [];
 
         if (empty(trim($_POST["name"]))) {
@@ -39,7 +38,7 @@ class UserController
                     "id" => $user->id,
                     "name" => $_POST["name"],
                     "surname" => $_POST["surname"],
-                    "status" => $_POST["status"] ?? "off",
+                    "status" => $_POST["status"],
                     "role" => $_POST["role"],
                 ],
             ];
@@ -86,7 +85,7 @@ class UserController
                         "id" => $id,
                         "name" => $_POST["name"],
                         "surname" => $_POST["surname"],
-                        "status" => $_POST["status"] ?? "off",
+                        "status" => $_POST["status"],
                         "role" => $_POST["role"],
 
                     ],
