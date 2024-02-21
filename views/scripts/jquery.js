@@ -3,18 +3,18 @@ $(document).ready(function () {
     event.preventDefault()
     const action = document.getElementById('deleteForm').action
 
-    if (action.split("/")[3] !== "error"){
-    closeModal('#deleteModal')
-    $.post(action, $(this).serialize(), function (data) {
-      data = JSON.parse(data)
-      if (data.status === true) {
-        document.getElementById('user_' + data.id).remove()
-      } else {
-        const modal = bootstrap.Modal.getOrCreateInstance(`#errorAlert`)
-        modal.show()
-      }
-    })
-    }else {
+    if (action.split('/')[3] !== 'error') {
+      closeModal('#deleteModal')
+      $.post(action, $(this).serialize(), function (data) {
+        data = JSON.parse(data)
+        if (data.status === true) {
+          document.getElementById('user_' + data.id).remove()
+        } else {
+          const modal = bootstrap.Modal.getOrCreateInstance(`#errorAlert`)
+          modal.show()
+        }
+      })
+    } else {
       closeModal('#deleteModal')
       const modal = bootstrap.Modal.getOrCreateInstance(`#errorAlert`)
       modal.show()
@@ -50,7 +50,7 @@ $(document).ready(function () {
           : '<div style="width: 20px; height: 20px; border-radius: 50%; background: #a7a7a7; margin-left: auto; margin-right: auto; margin-top: 10px;"></div>'
         tbody.insertAdjacentHTML('beforeend', `<tr id="user_${data.user.id}"><th scope=\"row\"><div><input class=\"form-check-input\" type=\"checkbox\" id=\"selectUser\" value=\"${data.user.id}\"></div></th><td id="full_name">${data.user.name} ${data.user.surname}</td><td id="user_role">${role}</td><td id="status">${status} </td> <td style=" display: flex; align-items: center; justify-content: center;"><div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group" role="group" aria-label="First group"><button type="button" class="btn btn-outline-secondary px-1 py-1" onclick="changeAction('/update/${data.user.id}', 'Update', ['${data.user.name}', '${data.user.surname}','${data.user.role}', '${data.user.status}'])" data-bs-toggle="modal" data-bs-target="#createOrUpdate"><span><i class="bi bi-pencil-square"></i></span></button><button onclick="changeActionSingleDelete('/delete/${data.user.id}','${data.user.name} ${data.user.surname}')" type="button" class="btn btn-outline-secondary px-1 py-1" data-bs-toggle="modal" data-bs-target="#deleteModal"><span><i class="bi bi-trash"></i></span></div></div></td>`)
 
-        const user_row = document.getElementById(data.user.id)
+        const user_row = document.getElementById('user_' + data.user.id)
         if (document.getElementById('selectAllCheckbox').value === 'on') {
           user_row.querySelector('#selectUser').checked = true
         }
@@ -169,10 +169,13 @@ $(document).ready(function () {
             }
           } else if (data.users.length === 1 && data[0].status !== false) {
             document.getElementById('user_' + data.users[0].id).remove()
+          } else if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && (idErrors.length > 0 || data.status === false)) {
+            errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
           }
+          console.log(idErrors)
         })
       })
-    } else if (document.getElementById('selectAction').value === 'delete' && selectedCheckBoxesIds.length > 0 && idErrors.length > 0 ) {
+    } else if (document.getElementById('selectAction').value === 'delete' && (selectedCheckBoxesIds.length > 0 || idErrors.length > 0)) {
       errorAlertMessage(`Error occurred. Please refresh the page to delete users`)
     }
     if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && selectedCheckBoxesIds.length > 0 && idErrors.length === 0) {
@@ -195,7 +198,7 @@ $(document).ready(function () {
               const name = full_name[0]
               const surname = full_name[1]
               let role = tr.querySelector('#user_role').innerHTML
-              role = role === "User" ? 2 : 1
+              role = role === 'User' ? 2 : 1
               if (item.status !== false) {
 
                 if (item.user_status === 1) {
@@ -210,12 +213,11 @@ $(document).ready(function () {
               }
             })
           }
-        }
-        else if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && (idErrors.length > 0 || data.status === false)) {
+        } else if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && (idErrors.length > 0 || data.status === false)) {
           errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
         }
       })
-    }else if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && idErrors.length > 0) {
+    } else if ((document.getElementById('selectAction').value == 0 || document.getElementById('selectAction').value == 1) && idErrors.length > 0) {
       errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
     }
 
@@ -298,7 +300,7 @@ $(document).ready(function () {
 
         })
       })
-    } else if (document.getElementById('bottomSelectAction').value === 'delete'  && (selectedCheckBoxesIds.length > 0 || idErrors.length > 0)) {
+    } else if (document.getElementById('bottomSelectAction').value === 'delete' && (selectedCheckBoxesIds.length > 0 || idErrors.length > 0)) {
       errorAlertMessage(`Error occurred. Please refresh the page to delete users`)
     }
 
@@ -322,7 +324,7 @@ $(document).ready(function () {
               const name = full_name[0]
               const surname = full_name[1]
               let role = tr.querySelector('#user_role').innerHTML
-              role = role === "User" ? 2 : 1
+              role = role === 'User' ? 2 : 1
               if (item.status !== false) {
 
                 if (item.user_status === 1) {
@@ -337,12 +339,11 @@ $(document).ready(function () {
               }
             })
           }
-        }
-        else if ((document.getElementById('bottomSelectAction').value == 0 || document.getElementById('bottomSelectAction').value == 1) && (idErrors.length > 0 || data.status === false)) {
+        } else if ((document.getElementById('bottomSelectAction').value == 0 || document.getElementById('bottomSelectAction').value == 1) && (idErrors.length > 0 || data.status === false)) {
           errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
         }
       })
-    }else if ((document.getElementById('bottomSelectAction').value == 0 || document.getElementById('bottomSelectAction').value == 1) && idErrors.length > 0) {
+    } else if ((document.getElementById('bottomSelectAction').value == 0 || document.getElementById('bottomSelectAction').value == 1) && idErrors.length > 0) {
       errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
     }
   })
