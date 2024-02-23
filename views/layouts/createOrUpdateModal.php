@@ -1,3 +1,4 @@
+
 <div class="modal fade " id="createOrUpdate" tabindex="-1" aria-labelledby="#createOrUpdate" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -6,6 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="" method="post" id="createOrUpdateForm">
+                <input type="hidden" name="id" value="" id="id">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="name" class="form-label">First name</label>
@@ -28,16 +30,16 @@
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select" aria-label="Default select example" id="role" name="role">
                             <option value="0">-Please Select-</option>
-                            <option value="1">Admin</option>
-                            <option value="2">User</option>
+                            <option value="1"><?= $role["role"]["1"]?></option>
+                            <option value="2"><?= $role["role"]["2"]?></option>
                         </select>
                         <div class="invalid-feedback d-block" id="role_error"></div>
                         <div class="invalid-feedback d-block" id="user_error"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="deleteErrors()">Close</button>
-                    <button type="submit" class="btn btn-primary" onclick="deleteErrors()"><span id="createUpdateModalSubmitButton"></span></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="createUpdateModalCloseButton">Close</button>
+                    <button type="submit" class="btn btn-primary"><span id="createUpdateModalSubmitButton"></span></button>
                 </div>
             </form>
         </div>

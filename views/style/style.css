@@ -1,0 +1,13 @@
+.status {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #a7a7a7;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+.active {
+    background: #198754;
+}

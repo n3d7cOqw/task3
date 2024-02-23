@@ -44,8 +44,8 @@ class App
             $table->increments('id');
             $table->string('name');
             $table->string('surname');
-            $table->string('role')->default("User"); // 0 - User 1 - Admin
-            $table->string('status')->default("off"); // 0 - grey 1 - green
+            $table->integer('role')->default(2); // 0 - User 1 - Admin
+            $table->integer('status')->default(0); // 0 - grey 1 - green
             $table->timestamps();
         });
     }
