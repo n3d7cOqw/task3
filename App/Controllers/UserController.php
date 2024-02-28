@@ -11,6 +11,7 @@ class UserController
 {
     public function store()
     {
+        header('Content-Type: application/json');
         if (isset($_POST["name"]) && isset($_POST["surname"]) && isset($_POST["role"]) && isset($_POST["status"]) && isset($_POST["id"]) && $_POST["id"] == "") {
             $user = new User();
             $user->name = $_POST["name"];
@@ -62,6 +63,7 @@ class UserController
 
     public function update()
     {
+        header('Content-Type: application/json');
         if (isset($_POST["name"]) && isset($_POST["surname"]) && isset($_POST["role"]) && isset($_POST["status"]) && isset($_POST["id"]) && $_POST["id"] != "") {
             $id = $_POST["id"];
             if (User::where('id', $id)->first() === null) {
@@ -114,6 +116,7 @@ class UserController
 
     public function delete()
     {
+        header('Content-Type: application/json');
         if (isset($_POST["delete_id"])) {
             $id = $_POST["delete_id"];
             if (User::where('id', $id)->first() === null) {
@@ -142,6 +145,7 @@ class UserController
 
     public function multipleEdit()
     {
+        header('Content-Type: application/json');
         $json = ["users" => []];
 
         $validated = true;

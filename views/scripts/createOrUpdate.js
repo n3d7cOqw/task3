@@ -2,7 +2,7 @@ $(document).ready(function () {
   $('#createOrUpdateForm').on('submit', function (event) {
     event.preventDefault()
 
-    let postStatus = $('#status').prop('checked') ? 1 : 0
+    let postStatus = $('#user_status').prop('checked') ? 1 : 0
     const elem = $('#createOrUpdateForm')
     $.post(elem.attr('action'), {
       name: $('#name').val(),
@@ -11,7 +11,8 @@ $(document).ready(function () {
       id: $('#id').val(),
       status: postStatus
     }, function (data) {
-      data = JSON.parse(data)
+      console.log(data)
+      console.log(typeof data)
       const form = $('#createOrUpdateForm')
       const action = form.attr('action')
       if (data.error == null) {
@@ -49,7 +50,6 @@ $(document).ready(function () {
         })
 
       } else {
-        console.log(data.error)
         data.error.forEach(function (item) {
           const name = Object.keys(item)[0]
           $(`#${name}_error`).html(item[name])
@@ -60,7 +60,7 @@ $(document).ready(function () {
       if (data.user !== undefined && data.user.name !== undefined && data.user.surname !== undefined && data.user.role !== undefined) {
         $('#name').val('')
         $('#last_name').val('')
-        $('#status').prop('checked', false)
+        $('#user_status').prop('checked', false)
         $('#role').val('-1')
       }
     })

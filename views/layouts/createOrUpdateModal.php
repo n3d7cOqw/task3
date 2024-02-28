@@ -23,15 +23,15 @@
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <label class="form-check-label" for="status">Status</label>
-                            <input class="form-check-input" type="checkbox" role="switch" id="status" name="status">
+                            <input class="form-check-input" type="checkbox" role="switch" id="user_status" name="status">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="role" class="form-label">Role</label>
                         <select class="form-select" aria-label="Default select example" id="role" name="role">
                             <option value="0">-Please Select-</option>
-                            <option value="1"><?= $role["role"]["1"]?></option>
-                            <option value="2"><?= $role["role"]["2"]?></option>
+                            <option value="1"><?= $role["role"][1]?></option>
+                            <option value="2"><?= $role["role"][2]?></option>
                         </select>
                         <div class="invalid-feedback d-block" id="role_error"></div>
                         <div class="invalid-feedback d-block" id="user_error"></div>

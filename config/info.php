@@ -2,6 +2,6 @@
     return [
         "role" => [
             1 => "Admin",
-            "2" => "User"
+            2 => "User"
         ]
     ];

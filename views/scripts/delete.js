@@ -6,7 +6,6 @@ $(document).ready(function () {
       closeModal('#deleteModal')
 
       $.post(action, { delete_id: $('#delete_id').val() }, function (data) {
-        data = JSON.parse(data)
 
         if (data.status === true) {
           $('#user_' + data.id).remove()

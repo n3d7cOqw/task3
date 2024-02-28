@@ -6,14 +6,13 @@ function clearForm (form) {
   inputs.val('');
   if (form === '#createOrUpdateForm') {
     $('#role').val('0');
-    $('#status').prop('checked', false);
+    $('#user_status').prop('checked', false);
   }
 }
 
 function changeCheckBoxCondition (event) {
   const checkBox = $('#selectAllCheckbox')
   const checkBoxes = $('input[id="selectUser"]');
-  console.log(checkBoxes)
   if (checkBox.val() === 'off') {
     checkBoxes.each(function () {
       $(this).prop("checked", true);
@@ -49,19 +48,16 @@ function deleteErrors () {
 }
 
 function changeAction(action, msg = '', info = null) {
-
   clearForm('#createOrUpdateForm');
   deleteErrors();
-
   elem.attr('action', action);
-  console.log(elem.attr('action', action))
   $('#createUpdateModalSubmitButton').html(msg);
   $('#createUpdateModalTitle').html(msg + ' User');
   if (info != null) {
     $('#name').val(info[0]);
     $('#last_name').val(info[1]);
     $('#role').val(info[2]);
-    $('#status').prop('checked', info[3] == '1');
+    $('#user_status').prop('checked', info[3] == '1');
     $('#id').val(info[4]);
   }
 }

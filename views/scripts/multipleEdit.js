@@ -1,12 +1,12 @@
 
-
 $(document).ready(function () {
-  $('#bottomMultipleEdit').on('submit', function (event) {
+  $('.menu form').on('submit', function (event) {
     event.preventDefault()
+    const selectActionVal = $(this).find("#selectAction").val()
     const checkBoxes = $('#selectUser')
     let selectedCheckBoxesIds = []
 
-    if ($('#bottomSelectAction').val() == -1) {
+    if (selectActionVal == -1) {
       const modal = bootstrap.Modal.getOrCreateInstance(`#alertModal`)
       const msg = $('.modal-body-alert')
       msg.text('Select action!')
@@ -32,7 +32,7 @@ $(document).ready(function () {
       msg.text('Select users!')
       modal.show()
     }
-    if ($('#bottomSelectAction').val() == '2' && selectedCheckBoxesIds.length > 0 && idErrors.length === 0) {
+    if (selectActionVal == '2' && selectedCheckBoxesIds.length > 0 && idErrors.length === 0) {
       const form = $('#deleteMultipleForm')
       const msg = $('.modal-delete-confirm')
       const modalDelete = bootstrap.Modal.getOrCreateInstance(`#deleteMultipleModal`)
@@ -46,11 +46,9 @@ $(document).ready(function () {
       form.on('submit', function (event) {
         event.preventDefault()
         closeModal('#deleteMultipleModal')
-        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data) {
-          data = JSON.parse(data)
-
+        $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: selectActionVal }, function (data) {
           selectedCheckBoxesIds = []
-          if ($('#bottomSelectAction').val() == '2' && (idErrors.length > 0 || data.status === false)) {
+          if (selectActionVal == '2' && (idErrors.length > 0 || data.status === false)) {
             errorAlertMessage(`Error occurred. Please refresh the page to delete users`)
           } else if (data.users.length > 1) {
             let errors = 0
@@ -68,20 +66,18 @@ $(document).ready(function () {
             }
           } else if (data.users.length === 1 && data[0].status !== false) {
             $('#user_' + data.users[0].id).remove()
-          } else if (($('#bottomSelectAction').val() == 0 || $('#bottomSelectAction').val() == 1) && (idErrors.length > 0 || data.status === false)) {
+          } else if ((selectActionVal == 0 || selectActionVal == 1) && (idErrors.length > 0 || data.status === false)) {
             errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
           }
           console.log(idErrors)
         })
       })
-    } else if ($('#bottomSelectAction').val() == '2' && (selectedCheckBoxesIds.length > 0 || idErrors.length > 0)) {
+    } else if (selectActionVal == '2' && (selectedCheckBoxesIds.length > 0 || idErrors.length > 0)) {
       errorAlertMessage(`Error occurred. Please refresh the page to delete users`)
     }
 
-    if (($('#bottomSelectAction').val() == 0 || $('#bottomSelectAction').val() == 1) && selectedCheckBoxesIds.length > 0 && idErrors.length === 0) {
-      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: $('#bottomSelectAction').val() }, function (data) {
-        data = JSON.parse(data)
-
+    if ((selectActionVal == 0 || selectActionVal == 1) && selectedCheckBoxesIds.length > 0 && idErrors.length === 0) {
+      $.post('/multiple-edit', { ids: selectedCheckBoxesIds, action: selectActionVal }, function (data) {
         let errors = 0
         if (selectedCheckBoxesIds.length > 0 && data.status !== false) {
           data.users.forEach(function (item) {
@@ -117,13 +113,13 @@ $(document).ready(function () {
               }
             })
           }
-        } else if (($('#bottomSelectAction').val() == 0 || $('#bottomSelectAction').val() == 1) && (idErrors.length > 0 || data.status === false)) {
+        } else if ((selectActionVal == 0 || selectActionVal == 1) && (idErrors.length > 0 || data.status === false)) {
           errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
         }
       })
-    } else if (($('#bottomSelectAction').val() == 0 || $('#bottomSelectAction').val() == 1) && idErrors.length > 0) {
+    } else if ((selectActionVal == 0 || selectActionVal == 1) && idErrors.length > 0) {
       errorAlertMessage(`Error occurred. Please refresh the page to update status of this users`)
     }
+
   })
 })
-

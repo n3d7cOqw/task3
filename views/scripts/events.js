@@ -37,19 +37,20 @@ $("#createUpdateModalCloseButton").on("click", function (){
 
 $(window).on('click', function (e) {
 
-  const checkBoxes = document.querySelectorAll('#selectUser')
-  const selected = []
-  const selectAll = document.getElementById('selectAllCheckbox')
+  const checkBoxes = $('input[id=selectUser]')
 
-  checkBoxes.forEach(function (elem) {
-    if (elem.checked) {
-      selected.push(elem.value)
+  const selected = []
+  const selectAll = $('#selectAllCheckbox')
+
+  checkBoxes.each(function () {
+    if (this.checked === true){
+      selected.push(this.value)
     }
   })
-
   if (e.target.id == 'selectUser') {
-    selectAll.value = checkBoxes.length === selected.length ? 'on' : 'off'
-    selectAll.checked = checkBoxes.length === selected.length
+    let value = checkBoxes.length === selected.length ? 'on' : 'off'
+    selectAll.val(`${value}`)
+    selectAll.prop("checked", checkBoxes.length === selected.length)
   }
 })
 

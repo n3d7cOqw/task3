@@ -16,7 +16,7 @@ $role = require_once "config/info.php";
 </head>
 <body>
 <div class="container">
-<?php require_once "views/layouts/upperMenu.php"?>
+    <?php require "views/layouts/menu.php" ?>
 
     <section class="table">
         <table class="table table-bordered">
@@ -42,22 +42,24 @@ $role = require_once "config/info.php";
                         </div>
                     </th>
                     <td id="full_name"><?= $user->name ?> <?= $user->surname ?></td>
-                    <td id="user_role"><?= $role["role"][$user->role]?></td>
+                    <td id="user_role"><?= $role["role"][$user->role] ?></td>
                     <td id="status">
-                        <div class="status <?php if ($user->status == 1){
+                        <div class="status <?php if ($user->status == 1) {
                             echo "active";
-                        }?>"></div>
-                        </td>
+                        } ?>"></div>
+                    </td>
                     <td style=" display: flex; align-items: center; justify-content: center;">
                         <div class="btn-toolbar" role="toolbar"
-                             aria-label="Toolbar with button groups" >
+                             aria-label="Toolbar with button groups">
                             <div class="btn-group" role="group" aria-label="First group">
                                 <button type="button" class="btn btn-outline-secondary px-1 py-1" data-bs-toggle="modal"
-                                        data-bs-target="#createOrUpdate" id="updateBtn"><span><i class="bi bi-pencil-square"></i></span>
+                                        data-bs-target="#createOrUpdate" id="updateBtn"><span><i
+                                                class="bi bi-pencil-square"></i></span>
                                 </button>
 
                                 <button type="button" class="btn btn-outline-secondary px-1 py-1" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal"><span><i class="bi bi-trash" id="deleteBtn"></i></span>
+                                        data-bs-target="#deleteModal"><span><i class="bi bi-trash"
+                                                                               id="deleteBtn"></i></span>
                             </div>
                         </div>
 
@@ -69,13 +71,14 @@ $role = require_once "config/info.php";
             </tbody>
         </table>
     </section>
-<?php require_once "views/layouts/lowerMenu.php"?>
+    <?php require "views/layouts/menu.php" ?>
+
 </div>
 <?php require_once "views/layouts/createOrUpdateModal.php" ?>
-<?php require_once "views/layouts/alertModal.php"?>
-<?php require_once "views/layouts/deleteMultipleModal.php"?>
-<?php require_once "views/layouts/errorAlert.php"?>
-<?php require_once "views/layouts/deleteModal.php"?>
+<?php require_once "views/layouts/alertModal.php" ?>
+<?php require_once "views/layouts/deleteMultipleModal.php" ?>
+<?php require_once "views/layouts/errorAlert.php" ?>
+<?php require_once "views/layouts/deleteModal.php" ?>
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -85,7 +88,6 @@ $role = require_once "config/info.php";
 <script src="views/scripts/events.js"></script>
 <script src="views/scripts/delete.js"></script>
 <script src="views/scripts/createOrUpdate.js"></script>
-<script src="views/scripts/upperMultipleEdit.js"></script>
-<script src="views/scripts/bottomMultipleEdit.js"></script>
+<script src="views/scripts/multipleEdit.js"></script>
 </body>
 </html>
